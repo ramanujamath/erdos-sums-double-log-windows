@@ -1,0 +1,731 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\setlength{\emergencystretch}{3em}
+\allowdisplaybreaks
+
+\numberwithin{equation}{section}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\fm}{\mathfrak{m}}
+\newcommand{\bs}{\mathbf{s}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\dn}{\pi^{\downarrow}}
+\newcommand{\up}{\pi^{\uparrow}}
+\newcommand{\one}{\mathbf{1}}
+
+\title{Gaussian concentration of Erd\H{o}s sums\\ in double-logarithmic windows}
+\author{Sumit Kumar Jha\\[2pt]
+\small Plot No.~78, Jal Shakti Vihar, Phase II, Greater Noida, Uttar Pradesh, India\\
+\small \texttt{sumitkumarjha75@gmail.com}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A set of integers greater than $1$ is \emph{primitive} if none of its elements divides another. The \emph{Erd\H{o}s sum} of such a set is $\sum 1/(n\log n)$ over its elements. For $T>0$ and $h\ge0$ let $\cM(T,h)$ be the largest Erd\H{o}s sum of a primitive set whose elements all satisfy $T<\log\log n\le T+h$. Writing $\Phi$ for the standard normal distribution function, we prove that for every fixed $\lambda_0>0$,
+\[
+\cM\bigl(T,\lambda\sqrt T\bigr)=2\Phi(\lambda/2)-1+O_{\lambda_0}\bigl(T^{-1/10}\bigr)
+\]
+uniformly for $0\le\lambda\le\lambda_0$ as $T\to\infty$. The maximum is approached by the integers in the window that have exactly $\lfloor T+\lambda\sqrt T/2\rfloor$ prime factors, counted with multiplicity. We also prove a stability theorem: if the Erd\H{o}s sums of primitive sets in these windows tend to the maximum, then the part of the sum coming from integers whose number of prime factors differs from $T+\lambda\sqrt T/2$ by more than $\eta\sqrt T$ tends to zero, for every fixed $\eta>0$, with an explicit rate. An example shows that one cannot strengthen this to concentration on a single number of prime factors. The proof combines two random divisibility chains, one through the small prime factors and one through the large ones, with a normal approximation and a quantitative rearrangement inequality.
+\end{abstract}
+
+\noindent\textbf{Keywords.} Primitive sets; Erd\H{o}s sums; almost primes; normal approximation; divisibility chains; stability.
+
+\noindent\textbf{MSC 2020.} Primary 11N25; Secondary 11B05, 11N60, 05D05.
+
+\tableofcontents
+
+%======================================================================
+\section{Introduction}\label{sec:intro}
+%======================================================================
+
+\subsection{The problem}
+A set $A\subset\{2,3,\dots\}$ is \emph{primitive} if no element of $A$ divides another element of $A$. Examples are the primes, or more generally the integers with exactly $k$ prime factors counted with multiplicity: a proper divisor of $n$ has strictly fewer prime factors than $n$. Erd\H{o}s showed in 1935 that the sums
+\[
+\nu(n)=\frac{1}{n\log n}\quad(n\ge2),\qquad \cE(A)=\sum_{n\in A}\nu(n),
+\]
+are bounded uniformly over all primitive sets $A$. We call $\cE(A)$ the \emph{Erd\H{o}s sum} of $A$. Recently Alexeev, Barreto, Li, Lichtman, Price, Shah, Tang and Tao \cite[Theorem~1.1]{ABLLPSTT} proved a conjecture of Erd\H{o}s, S\'ark\"ozy and Szemer\'edi: uniformly for primitive sets $B\subset[x,\infty)$,
+\begin{equation}\label{eq:tail}
+\cE(B)\le 1+O(1/\log x).
+\end{equation}
+
+This paper asks how large $\cE(A)$ can be when the elements of $A$ are confined to a window on the scale $\log\log n$. For $T>0$ and $h\ge0$ let
+\[
+I(T,h)=\{n\in\N:\ n\ge2,\ T<\log\log n\le T+h\},
+\]
+\[
+\cM(T,h)=\max\{\cE(A):\ A\subset I(T,h)\ \text{primitive}\}.
+\]
+As a set of integers, $I(T,h)$ is the interval $(e^{e^T},e^{e^{T+h}}]$; it is finite, so the maximum exists, and $\cM(T,0)=0$. Windows of length $h\asymp\sqrt T$ are the natural ones, because $\log\log n$ is both the mean and the variance of the number of prime factors of a typical integer near $n$.
+
+\subsection{Notation}
+We write $\N=\{1,2,\dots\}$ and $\N_0=\{0,1,2,\dots\}$. All logarithms are natural, and $p$ and $q$ always denote primes. For a prime $p$ and $n\in\N$, $v_p(n)$ is the exponent of $p$ in $n$, and
+\[
+\Omega(n)=\sum_p v_p(n)
+\]
+is the number of prime factors of $n$ counted with multiplicity ($\Omega(1)=0$). We sometimes call $\Omega(n)$ the \emph{rank} of $n$. The notation $f=O(g)$ and $f\ll g$ both mean $|f|\le Cg$ for some constant $C$; a subscript, as in $O_{\lambda_0}$, lists the parameters on which $C$ may depend. Limits in $T$ are taken as $T\to\infty$. Finally,
+\[
+\phi(u)=\frac{e^{-u^2/2}}{\sqrt{2\pi}},\qquad \Phi(v)=\int_{-\infty}^v\phi(u)\,du,\qquad
+G(\lambda)=2\Phi(\lambda/2)-1\quad(\lambda\ge0).
+\]
+Thus $G(\lambda)$ is the probability that a standard normal variable lies in an interval of length $\lambda$ centred at $0$. It increases from $G(0)=0$ to $1$.
+
+\subsection{Results}
+
+\begin{theorem}[Concentration]\label{thm:main}
+For every fixed $\lambda_0>0$,
+\begin{equation}\label{eq:main}
+\sup_{0\le\lambda\le\lambda_0}\bigl|\cM(T,\lambda\sqrt T)-G(\lambda)\bigr|\ll_{\lambda_0}T^{-1/10}.
+\end{equation}
+In particular $\cM(T,\lambda\sqrt T)\to G(\lambda)$ for each fixed $\lambda>0$. This limit is attained by the primitive sets
+\[
+A_T=\bigl\{n\in I(T,\lambda\sqrt T):\ \Omega(n)=\lfloor T+\lambda\sqrt T/2\rfloor\bigr\}.
+\]
+\end{theorem}
+
+For $\lambda>0$ and a primitive set $A\subset I(T,\lambda\sqrt T)$ define the \emph{deficit}
+\[
+\Delta_T(A)=\cM(T,\lambda\sqrt T)-\cE(A)\ \ge0 .
+\]
+
+\begin{theorem}[Stability of the number of prime factors]\label{thm:stability}
+Fix $\lambda,\eta>0$. For all sufficiently large $T$ and every primitive $A\subset I(T,\lambda\sqrt T)$,
+\begin{equation}\label{eq:stability}
+\sum_{\substack{n\in A\\ |\Omega(n)-T-\lambda\sqrt T/2|>\eta\sqrt T}}\nu(n)\ \ll_{\lambda,\eta}\ \bigl(\Delta_T(A)+T^{-1/10}\bigr)^{1/2}.
+\end{equation}
+Consequently, if $A_T\subset I(T,\lambda\sqrt T)$ are primitive and $\cE(A_T)\to G(\lambda)$, then the left side of \eqref{eq:stability} tends to $0$ for every fixed $\eta>0$.
+\end{theorem}
+
+The lower bound in Theorem~\ref{thm:main} is the easy half: the set $A_T$ is primitive, and its Erd\H{o}s sum follows from the Sathe--Selberg asymptotic for integers with a given number of prime factors (Section~\ref{sec:lower}). The work lies in the upper bound for arbitrary primitive sets.
+
+Proposition~\ref{prop:example} shows that Theorem~\ref{thm:stability} is sharp in the following sense: there are asymptotically maximizing primitive sets in which no single value of $\Omega$ carries more than half of the sum.
+
+We also record two consequences for windows whose length is not exactly of order $\sqrt T$ (Corollaries~\ref{cor:uniform} and~\ref{cor:short}): $\cM(T,h)-G(h/\sqrt T)\to0$ uniformly in $h\ge0$, and $\cM(T,h)\sim h/\sqrt{2\pi T}$ when $h\to\infty$ and $h=o(\sqrt T)$.
+
+\subsection{Context}
+Two known extremal results bracket the problem. Erd\H{o}s, S\'ark\"ozy and Szemer\'edi \cite[p.~484]{ESS1} proved that
+\begin{equation}\label{eq:ESS}
+\max_{\substack{B\subset\{2,\dots,\lfloor x\rfloor\}\\ B\ \text{primitive}}}\ \sum_{n\in B}\frac1n\ \sim\ \frac{\log x}{\sqrt{2\pi\log\log x}}.
+\end{equation}
+Partial summation of \eqref{eq:ESS} (as in the proof of Corollary~\ref{cor:short}), together with \eqref{eq:tail} and the lower bound of Section~\ref{sec:lower}, gives
+\[
+G(\lambda)\le\liminf_{T\to\infty}\cM(T,\lambda\sqrt T)\le\limsup_{T\to\infty}\cM(T,\lambda\sqrt T)\le\min\bigl\{1,\lambda/\sqrt{2\pi}\bigr\}.
+\]
+Theorem~\ref{thm:main} closes this gap and adds an error term. Related weighted extremal problems for primitive sets were studied by Ahlswede, Khachatrian and S\'ark\"ozy \cite[Theorems~1--3]{AKS}, including primitive sets in ordinary multiplicative intervals, and by Kucheriaviy \cite{Kuch}, including weights that depend on the number of prime factors and extremal sums over initial intervals. Erd\H{o}s, S\'ark\"ozy and Szemer\'edi also considered gaps of order $\sqrt{\log\log x}$ in a related problem \cite[p.~15]{ESS2}.
+
+\subsection{Method}
+The upper bound uses random divisibility chains, in the spirit of \cite{ABLLPSTT}. Factor each $n$ as $n=dm$, where every prime factor of $d$ is at most a cutoff $z$ and every prime factor of $m$ exceeds $z$.
+\begin{itemize}
+\item For the small-prime part we build a random chain $\bs_0\mid\bs_1\mid\bs_2\mid\cdots$ with $\Omega(\bs_k)=k$, whose distribution at each rank is proportional to $1/d$ (Section~\ref{sec:smooth}). Its existence follows from a theorem of Harper on products of partially ordered sets. The total weight of rank $k$ is, after normalization, the probability that a sum of independent geometric random variables equals $k$; this sum is approximately normal with variance about $\log\log z$.
+\item For the large-prime part we use the ``upward'' chain adjoint to the downward chain of \cite[Section~2.2]{ABLLPSTT}. We show that its transition weights sum to at most $1+O((\log z)^{-2})$ (Sections~\ref{sec:roughnorm}--\ref{sec:roughchain}).
+\end{itemize}
+Running the two chains independently, the pairs $(k,j)$ for which $\bs_k\br_j$ lies in a primitive set $A$ form an \emph{antichain} in the grid: no two of them are comparable coordinatewise. If the large-prime rank $j$ is confined to an interval of length $\ell$, such an antichain has at most $\ell$ points, so taking expectations bounds $\cE(A)$ by the largest total normal mass of $\ell$ consecutive ranks, which is about $G(\ell/\sqrt{\log\log z})$. Section~\ref{sec:largerank} shows that, for the right choice of $z$, the large-prime rank of almost every integer in the window lies in an interval of length $\lambda\sqrt T+O(T^{2/5})$; this is where the exponent $1/10$ comes from. For the stability theorem (Section~\ref{sec:stability}) we look at which ranks the antichain actually uses and quantify the loss when it departs from the optimal block of ranks.
+
+We make no claim that the exponent $1/10$ is optimal.
+
+\subsection{Organisation}
+Section~\ref{sec:lower} proves the lower bound. Section~\ref{sec:smooth} constructs the small-prime chain and analyses its rank weights. Sections~\ref{sec:roughnorm} and~\ref{sec:roughchain} construct the large-prime chain and prove the product-chain bound (Proposition~\ref{prop:product}). Section~\ref{sec:largerank} controls integers whose large-prime rank is atypical. Section~\ref{sec:proofmain} proves Theorem~\ref{thm:main} and its corollaries, and Section~\ref{sec:stability} proves Theorem~\ref{thm:stability} and gives the example. Appendix~\ref{app:verification} describes the accompanying numerical checks.
+
+%======================================================================
+\section{The lower bound}\label{sec:lower}
+%======================================================================
+
+For $k\in\N$ and $x>e$ let $N_k(x)=\#\{n\le x:\Omega(n)=k\}$, and put $s=\log\log x$. Let $\Gamma(v)=\int_0^\infty t^{v-1}e^{-t}\,dt$ be the gamma function and, for real $w$ near $1$,
+\[
+\mathfrak S(w)=\frac{1}{\Gamma(1+w)}\prod_p\Bigl(1-\frac wp\Bigr)^{-1}\Bigl(1-\frac1p\Bigr)^{w}.
+\]
+The product converges locally uniformly near $w=1$, $\mathfrak S$ is smooth there, and $\mathfrak S(1)=1$. The Sathe--Selberg theorem, in the form of \cite[Theorem~2.3]{Lichtman-BM}, states that, uniformly for $k/s$ in a fixed neighbourhood of $1$,
+\begin{equation}\label{eq:SS}
+N_k(x)=\mathfrak S\Bigl(\frac{k-1}{s}\Bigr)\frac{x}{\log x}\frac{s^{k-1}}{(k-1)!}\Bigl(1+O\Bigl(\frac{k}{s^2}\Bigr)\Bigr).
+\end{equation}
+
+\begin{lemma}\label{lem:lower}
+Fix $H>0$. For real $u_1,u_2,c$ with $-H\le u_1\le u_2\le H$ and $|c|\le H$ put $k=\lfloor T+c\sqrt T\rfloor$. Then, uniformly in $u_1,u_2,c$,
+\[
+\sum_{\substack{T+u_1\sqrt T<\log\log n\le T+u_2\sqrt T\\ \Omega(n)=k}}\nu(n)=\int_{u_1}^{u_2}\phi(u-c)\,du+O_H(T^{-1/2}).
+\]
+\end{lemma}
+
+\begin{proof}
+Let $X=e^{e^{T+u_1\sqrt T}}$ and $Y=e^{e^{T+u_2\sqrt T}}$. Since $\frac{d}{dt}\nu(t)=-(\log t+1)/(t\log t)^2$, partial summation gives
+\[
+\sum_{\substack{X<n\le Y\\ \Omega(n)=k}}\nu(n)=\frac{N_k(Y)}{Y\log Y}-\frac{N_k(X)}{X\log X}+\int_X^YN_k(t)\,\frac{\log t+1}{t^2(\log t)^2}\,dt.
+\]
+Substitute $s=\log\log t$, so that $ds=dt/(t\log t)$, and insert \eqref{eq:SS}. Since $k/s=1+O_H(T^{-1/2})$ on the range of integration, $\mathfrak S((k-1)/s)=1+O_H(T^{-1/2})$ and the error term in \eqref{eq:SS} is $O_H(T^{-1})$. The integral becomes
+\[
+\int_{T+u_1\sqrt T}^{T+u_2\sqrt T}\frac{e^{-s}s^{k-1}}{(k-1)!}\bigl(1+e^{-s}\bigr)\bigl(1+O_H(T^{-1/2})\bigr)\,ds.
+\]
+The factor $e^{-s}s^{k-1}/(k-1)!$ is the probability that a Poisson variable of mean $s$ equals $k-1$. By Stirling's formula (the local limit theorem for the Poisson distribution), writing $s=T+u\sqrt T$,
+\[
+\sqrt T\,\frac{e^{-s}s^{k-1}}{(k-1)!}=\phi(u-c)\bigl(1+O_H(T^{-1/2})\bigr)\qquad(|u|\le H).
+\]
+Changing variables to $u$ (so $ds=\sqrt T\,du$) gives the main term $\int_{u_1}^{u_2}\phi(u-c)\,du$ with the stated error. The two endpoint terms are $O_H(e^{-T+H\sqrt T}/\sqrt T)$, which is negligible.
+\end{proof}
+
+With $u_1=0$, $u_2=\lambda$ and $c=\lambda/2$, the right side is $\int_{-\lambda/2}^{\lambda/2}\phi=G(\lambda)$, up to $O(T^{-1/2})$. Since $A_T$ is primitive, this proves the lower bound in Theorem~\ref{thm:main}:
+\begin{equation}\label{eq:lowerbound}
+\cM(T,\lambda\sqrt T)\ge\cE(A_T)\ge G(\lambda)-C_{\lambda_0}T^{-1/2}\qquad(0\le\lambda\le\lambda_0).
+\end{equation}
+
+%======================================================================
+\section{A chain through the small primes}\label{sec:smooth}
+%======================================================================
+
+Let $z\ge3$. An integer is \emph{$z$-smooth} if all its prime factors are at most $z$; we count $1$ as $z$-smooth. Let $\cS_z$ be the set of $z$-smooth integers and
+\[
+W_k(z)=\sum_{\substack{d\in\cS_z\\ \Omega(d)=k}}\frac1d\quad(k\ge0),\qquad
+W(z)=\sum_{k\ge0}W_k(z)=\prod_{p\le z}\Bigl(1-\frac1p\Bigr)^{-1}.
+\]
+So $W_0(z)=1$. For $\ell\in\N$ let $S_\ell(z)$ be the sum of the $\ell$ largest terms of the sequence $(W_k(z))_{k\ge0}$, and set $S_0(z)=0$. We use $\PP$ and $\EE$ for probability and expectation. A \emph{coupling} of two probability distributions is a joint distribution having them as its marginals.
+
+\begin{lemma}[The small-prime chain]\label{lem:smoothchain}
+There is a random sequence $\bs_0\mid\bs_1\mid\bs_2\mid\cdots$ in $\cS_z$ such that each quotient $\bs_{k+1}/\bs_k$ is a prime, $\Omega(\bs_k)=k$, and
+\begin{equation}\label{eq:smoothmarg}
+\PP(\bs_k=d)=\frac{1}{d\,W_k(z)}\qquad(d\in\cS_z,\ \Omega(d)=k).
+\end{equation}
+Moreover the sequence $(W_k(z))_{k\ge0}$ is log-concave: $W_k(z)^2\ge W_{k-1}(z)W_{k+1}(z)$ for $k\ge1$.
+\end{lemma}
+
+\begin{proof}
+We use a theorem of Harper about finite partially ordered sets whose elements carry positive weights. Such a set is \emph{ranked} if there is an integer-valued rank function that increases by exactly $1$ whenever one element \emph{covers} another (that is, lies directly above it, with nothing in between). It has a \emph{normalized flow} if, for every pair of consecutive ranks, there is a coupling of the two distributions ``weight divided by the total weight of the rank'' that is supported on covering pairs. Harper's product theorem \cite[Theorem~I.C]{Harper} (see also \cite[Theorem~2.5]{GaetzGao}) states that if two ranked weighted posets both have normalized flows and log-concave sequences of rank weights, then so does their product (with product weights).
+
+For each prime $p\le z$ and an integer $E\ge1$, consider the chain $0<1<\dots<E$ with weight $p^{-j}$ at $j$. Each rank has one element, so a normalized flow exists trivially, and the rank weights $p^{-j}$ are log-concave (with equality). The product of these chains over $p\le z$ is the set of $z$-smooth $d$ with all exponents at most $E$, ordered by divisibility; its weights are $1/d$, its rank function is $\Omega$, and covering means multiplication by one prime. By Harper's theorem it has a normalized flow and log-concave rank weights.
+
+Fix $k$ and take $E\ge k+1$. Then ranks $k$ and $k+1$ of the truncated product are exactly the $z$-smooth integers with $\Omega=k$ and $\Omega=k+1$, so the normalized flow yields a coupling of the two distributions in \eqref{eq:smoothmarg} supported on pairs $(d,dp)$. Choose such a coupling for each $k$ and use its conditional probabilities as transition probabilities from rank $k$ to rank $k+1$, starting from $\bs_0=1$. By induction on $k$, $\bs_k$ has the distribution \eqref{eq:smoothmarg}. The same truncated products give the log-concavity of $W_k(z)$ for each $k$.
+\end{proof}
+
+Write
+\[
+p_k(z)=\frac{W_k(z)}{W(z)},\qquad F^*_\ell(z)=\frac{S_\ell(z)}{W(z)}\quad(F^*_0(z)=0),
+\]
+so that $F^*_\ell(z)$ is the sum of the $\ell$ largest $p_k(z)$, and define
+\[
+\mu_z=\sum_{p\le z}\frac{1}{p-1},\qquad \sigma_z^2=\sum_{p\le z}\frac{p}{(p-1)^2}.
+\]
+
+\begin{lemma}[Normal approximation of the rank weights]\label{lem:normal}
+We have $\mu_z=\log\log z+O(1)$ and $\sigma_z^2=\log\log z+O(1)$. For each fixed $H>0$,
+\begin{equation}\label{eq:Fstar}
+F^*_\ell(z)=G(\ell/\sigma_z)+O_H(\sigma_z^{-1})\qquad(0\le\ell\le H\sigma_z),
+\end{equation}
+uniformly over integers $\ell$, as $z\to\infty$. Moreover
+\begin{equation}\label{eq:maxpk}
+\max_{k\ge0}p_k(z)\ll\sigma_z^{-1}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For $p\le z$ let $X_p$ be independent random variables with the geometric distribution $\PP(X_p=j)=(1-1/p)p^{-j}$, $j\ge0$, and let $\cK_z=\sum_{p\le z}X_p$. Expanding the product $\prod_{p\le z}(1-1/p)\sum_{j\ge0}p^{-j}$ shows that $\PP(\cK_z=k)=p_k(z)$. The mean and variance of $X_p$ are $1/(p-1)$ and $p/(p-1)^2$, so $\cK_z$ has mean $\mu_z$ and variance $\sigma_z^2$. Mertens' estimate $\sum_{p\le z}1/p=\log\log z+O(1)$ \cite[Theorem~6.10]{Dusart} gives the first two assertions. Since $\EE|X_p-\EE X_p|^3\ll1/p$, the sum of third absolute central moments is $\ll\sigma_z^2$, and the Berry--Esseen inequality for independent summands \cite[Chapter~V]{Petrov} gives
+\begin{equation}\label{eq:BE}
+\sup_{t\in\R}\Bigl|\PP\Bigl(\frac{\cK_z-\mu_z}{\sigma_z}\le t\Bigr)-\Phi(t)\Bigr|\ll\sigma_z^{-1}.
+\end{equation}
+Since $p_k(z)=\PP(\cK_z\le k)-\PP(\cK_z\le k-1)$, \eqref{eq:BE} and the bound $|\Phi'|\le1$ give \eqref{eq:maxpk}.
+
+By Lemma~\ref{lem:smoothchain} the sequence $(p_k(z))$ is log-concave, hence unimodal: it increases up to a maximum and then decreases. Therefore its $\ell$ largest terms can be taken at $\ell$ consecutive indices $q,q+1,\dots,q+\ell-1$, and by \eqref{eq:BE}
+\[
+F^*_\ell(z)=\max_{q\ge0}\Bigl[\Phi\Bigl(\frac{q+\ell-1-\mu_z}{\sigma_z}\Bigr)-\Phi\Bigl(\frac{q-1-\mu_z}{\sigma_z}\Bigr)\Bigr]+O(\sigma_z^{-1}).
+\]
+The bracket is the normal mass of an interval of length $\ell/\sigma_z$; this is at most $G(\ell/\sigma_z)$, with equality when the interval is centred at $0$. Since $\mu_z/\sigma_z\to\infty$, some integer $q\ge0$ centres the interval to within $O(\sigma_z^{-1})$, uniformly for $\ell\le H\sigma_z$. This proves \eqref{eq:Fstar} for $\ell\ge1$, and the case $\ell=0$ is trivial.
+\end{proof}
+
+%======================================================================
+\section{Normalization for the large primes}\label{sec:roughnorm}
+%======================================================================
+
+An integer is \emph{$z$-rough} if all its prime factors exceed $z$; we count $1$ as $z$-rough. Let $\cR_z$ be the set of $z$-rough integers. Every $n\in\N$ factors uniquely as $n=dm$ with $d\in\cS_z$ and $m\in\cR_z$. For $R\in\N$ put
+\[
+F_R(z)=\sum_{\substack{m\in\cR_z\\ \Omega(m)=R}}\nu(m).
+\]
+Let $\gamma=\lim_{N\to\infty}\bigl(\sum_{j\le N}1/j-\log N\bigr)$ be Euler's constant, let
+\[
+E_1(u)=\int_u^\infty\frac{e^{-v}}{v}\,dv\quad(u>0)
+\]
+be the exponential integral, and let
+\[
+a_R=\frac1{R!}\int_0^\infty E_1(u)^R\,du\qquad(R\in\N).
+\]
+For example $a_1=1$ and $a_2=\log2$. Write $\vartheta(t)=\sum_{p\le t}\log p$. We use the prime number theorem and Mertens' product formula in the forms
+\begin{equation}\label{eq:primes}
+\vartheta(t)=t+O\bigl(t/(\log t)^2\bigr),\qquad W(z)=e^\gamma\log z\,\bigl(1+O((\log z)^{-2})\bigr);
+\end{equation}
+explicit versions are in \cite[Theorems~5.2 and~6.12]{Dusart}. Set
+\[
+\epsilon_z=\sup_{t\ge z}\Bigl|\frac{\vartheta(t)}{t}-1\Bigr|,\qquad \rho_z=(\log z)^{-2}+z^{-1},
+\]
+so that $\epsilon_z\ll(\log z)^{-2}\le\rho_z$.
+
+\begin{lemma}\label{lem:FR}
+The series $F_R(z)$ converges for $z\ge3$ and $R\ge1$. Uniformly for all integers $R\ge1$ and all sufficiently large $z$,
+\begin{align}
+(\log z)\,F_R(z)&=a_R+O\bigl(2^R(\epsilon_z+z^{-1})\bigr),\label{eq:FRa}\\
+a_R&=e^{-\gamma}+O(2^{-R}),\label{eq:aR}\\
+W(z)\,F_R(z)&=1+O\bigl(2^{-R}+2^R\rho_z\bigr),\label{eq:WF}
+\end{align}
+with absolute implied constants.
+\end{lemma}
+
+\begin{proof}
+Let $L=\log z$ and, for $s>1$,
+\[
+P_z(s)=\sum_{p>z}p^{-s},\qquad Z_R(z,s)=\sum_{\substack{m\in\cR_z\\ \Omega(m)=R}}m^{-s}.
+\]
+Since $\nu(m)=\int_1^\infty m^{-s}\,ds$ for $m\ge2$, the substitution $s=1+u/L$ gives
+\[
+L\,F_R(z)=\int_0^\infty Z_R(z,1+u/L)\,du .
+\]
+By unique factorization, $\sum_{R\ge0}Z_R(z,s)v^R=\prod_{p>z}(1-vp^{-s})^{-1}=\exp\bigl(\sum_{j\ge1}v^jP_z(js)/j\bigr)$, so $Z_R(z,s)$ is a finite sum of products of the numbers $P_z(js)$, $j\le R$. Together with $P_z(js)\le P_z(s)$ and the bound $P_z(1+u/L)\ll(1+u)E_1(u)$ (a consequence of \eqref{eq:Pz} below), and since every fixed power of $(1+u)E_1(u)$ is integrable on $(0,\infty)$, this shows that $F_R(z)$ converges.
+
+\emph{Comparison of $P_z$ with $E_1$.} Write $P_z(1+u/L)=\int_z^\infty f(t)\,d\vartheta(t)$ with $f(t)=t^{-1-u/L}/\log t$. Then $\int_z^\infty f(t)\,dt=E_1(u)$ (substitute $t=e^{Lw/u}$), and integrating by parts against $d(\vartheta(t)-t)$, using $|\vartheta(t)-t|\le\epsilon_zt$ for $t\ge z$, gives an error at most $\epsilon_z\bigl(zf(z)+\int_z^\infty t(-f'(t))\,dt\bigr)$. Since $\int_z^\infty t(-f'(t))\,dt=zf(z)+\int_z^\infty f(t)\,dt$ and $zf(z)=e^{-u}/L$, we obtain
+\begin{equation}\label{eq:Pz}
+\bigl|P_z(1+u/L)-E_1(u)\bigr|\le\epsilon_z\Bigl(E_1(u)+\frac{2e^{-u}}{L}\Bigr).
+\end{equation}
+
+\emph{Generating functions.} For complex $v$ with $|v|\le1/2$ let
+\[
+\cB_z(v,u)=\sum_{j\ge2}\frac{v^j}{j}P_z\bigl(j(1+u/L)\bigr).
+\]
+For $j\ge2$ we have $P_z(j(1+u/L))\le e^{-ju}\sum_{n>z}n^{-j}\ll z^{1-j}e^{-ju}$, because $n^{-ju/L}\le z^{-ju/L}=e^{-ju}$ for $n>z$. Hence
+\begin{equation}\label{eq:Bz}
+|\cB_z(v,u)|\ll z^{-1}e^{-2u}.
+\end{equation}
+Define
+\[
+\Psi_z(v)=\int_0^\infty\Bigl(\exp\bigl(vP_z(1+u/L)+\cB_z(v,u)\bigr)-1\Bigr)\,du,\qquad
+\Psi(v)=\int_0^\infty\bigl(e^{vE_1(u)}-1\bigr)\,du.
+\]
+For large $z$ both integrals converge locally uniformly for $v$ in a neighbourhood of the disc $|v|\le1/2$: near $u=0$ because $E_1(u)=-\gamma-\log u+O(u)$ and \eqref{eq:Pz}, so the integrands are $O(u^{-1/2-o(1)})$; and at infinity because $E_1(u)\le e^{-u}/u$. So $\Psi_z$ and $\Psi$ are analytic there. By the generating function above, the coefficient of $v^R$ in $\Psi_z(v)$ is $\int_0^\infty Z_R(z,1+u/L)\,du=L\,F_R(z)$, and the coefficient of $v^R$ in $\Psi(v)$ is $a_R$.
+
+Using $|e^a-e^b|\le|a-b|e^{\max(\operatorname{Re}a,\operatorname{Re}b)}$ together with \eqref{eq:Pz} and \eqref{eq:Bz}, once $\epsilon_z\le1/4$ the difference of the two integrands is bounded by a constant times
+\[
+(\epsilon_z+z^{-1})\bigl(E_1(u)+e^{-u}\bigr)e^{3E_1(u)/4},
+\]
+which is integrable over $(0,\infty)$. Hence $\sup_{|v|\le1/2}|\Psi_z(v)-\Psi(v)|\ll\epsilon_z+z^{-1}$, and Cauchy's estimate for the coefficient of $v^R$ on the circle $|v|=1/2$ gives \eqref{eq:FRa}.
+
+\emph{The constants $a_R$.} Using $E_1(u)=\int_1^\infty e^{-ut}\,dt/t$, Tonelli's theorem, and symmetry in the variables,
+\[
+a_R=\frac1{R!}\int_{[1,\infty)^R}\frac{dt_1\cdots dt_R}{t_1\cdots t_R\,(t_1+\dots+t_R)}
+=\int_{t_1\ge\dots\ge t_R\ge1}\frac{dt_1\cdots dt_R}{t_1\cdots t_R\,(t_1+\dots+t_R)}.
+\]
+For $R\ge2$ substitute $t_1=v$ and $t_i=vx_1\cdots x_{i-1}$ ($2\le i\le R$), with $0<x_i\le1$. Write $\Pi=x_1\cdots x_{R-1}$ and $\Sigma=1+x_1+x_1x_2+\dots+x_1\cdots x_{R-1}$. The Jacobian is $v^{R-1}\prod_{i=2}^{R}x_1\cdots x_{i-2}$, so the integrand becomes $dv\,dx_1\cdots dx_{R-1}/(v^2\Pi\Sigma)$, and the condition $t_R\ge1$ becomes $v\ge\Pi^{-1}$. Since $\int_{\Pi^{-1}}^\infty v^{-2}\,dv=\Pi$,
+\begin{equation}\label{eq:aRcube}
+a_R=\int_{[0,1]^{R-1}}\frac{dx_1\cdots dx_{R-1}}{1+x_1+x_1x_2+\dots+x_1\cdots x_{R-1}}.
+\end{equation}
+This is the integral $I_{R-1}$ of Gorodetsky, Lichtman and Wong \cite[Theorem~1.6]{GLW} (with $I_0=1$), who proved $I_k=e^{-\gamma}+O(2^{-k})$. This is \eqref{eq:aR}. Finally, \eqref{eq:FRa}, \eqref{eq:aR} and \eqref{eq:primes} combine to give \eqref{eq:WF}, since $\epsilon_z+z^{-1}\ll\rho_z$.
+\end{proof}
+
+The point of \eqref{eq:WF} is that $R$ may grow with $T$; this is needed for the error term in Theorem~\ref{thm:main}.
+
+%======================================================================
+\section{A chain through the large primes, and the product bound}\label{sec:roughchain}
+%======================================================================
+
+Put
+\[
+\delta_z=3\epsilon_z+\frac1z\ \ll\ \rho_z.
+\]
+We adjoin to $\cR_z$ an extra state $\dagger$, which is \emph{absorbing}: once the chain reaches $\dagger$ it stays there.
+
+\begin{lemma}[The large-prime chain]\label{lem:roughchain}
+Let $z\ge3$ and $R\in\N$. There is a random sequence $(\br_j)_{j\ge R}$ with values in $\cR_z\cup\{\dagger\}$ and absorbing state $\dagger$, such that: while $\br_j\ne\dagger$ we have $\Omega(\br_j)=j$; whenever $\br_j$ and $\br_{j+1}$ are both integers, $\br_{j+1}/\br_j$ is a prime greater than $z$; and
+\begin{equation}\label{eq:roughmarg}
+\PP(\br_j=m)=\frac{\nu(m)}{F_R(z)\,(1+\delta_z)^{j-R}}\qquad(m\in\cR_z,\ \Omega(m)=j).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For a $z$-rough $n\ge2$ define the \emph{downward} transition probabilities
+\[
+\dn(n,n/p)=\frac{v_p(n)\log p}{\log n}\qquad(p\mid n).
+\]
+They sum to $1$ over $p\mid n$. For $m\in\cR_z$ with $m\ge2$ and a prime $p>z$, define the \emph{upward} weights as the adjoint of $\dn$ with respect to $\nu$:
+\[
+\up(m,mp)=\frac{\nu(mp)}{\nu(m)}\,\dn(mp,m)=\frac{(\log m)\,(v_p(m)+1)\log p}{p\,(\log mp)^2}.
+\]
+This construction follows \cite[Section~2.2]{ABLLPSTT}; what we add is the following bound for the total upward weight.
+
+Write $L_m=\log m$; note $L_m>\log z>1$. The part of $\sum_{p>z}\up(m,mp)$ containing $v_p(m)$ is
+\[
+L_m\sum_{p\mid m}\frac{v_p(m)\log p}{p(L_m+\log p)^2}\le\frac{1}{zL_m}\sum_{p\mid m}v_p(m)\log p=\frac1z .
+\]
+For the rest, let $f(t)=1/\bigl(t(L_m+\log t)^2\bigr)$. Integrating by parts against $d\vartheta$ as in \eqref{eq:Pz},
+\[
+\begin{aligned}
+\sum_{p>z}\frac{\log p}{p(L_m+\log p)^2}&\le\int_z^\infty f(t)\,dt+\epsilon_z\Bigl(zf(z)+\int_z^\infty t(-f'(t))\,dt\Bigr)\\
+&=\frac{1}{L_m+\log z}+\epsilon_z\Bigl(\frac{1}{L_m+\log z}+\frac{2}{(L_m+\log z)^2}\Bigr).
+\end{aligned}
+\]
+Multiplying by $L_m$ and using $L_m/(L_m+\log z)<1$ and $L_m+\log z>2$, we get
+\[
+\sum_{p>z}\up(m,mp)\le1+3\epsilon_z+\frac1z=1+\delta_z .
+\]
+
+Now define the chain. Start at rank $R$ with $\PP(\br_R=m)=\nu(m)/F_R(z)$, a probability distribution by Lemma~\ref{lem:FR}. From an integer state $m$ move to $mp$ with probability $\up(m,mp)/(1+\delta_z)$, and to $\dagger$ with the remaining probability. If \eqref{eq:roughmarg} holds at rank $j$ and $\Omega(n)=j+1$, then
+\[
+\PP(\br_{j+1}=n)=\sum_{p\mid n}\frac{\nu(n/p)}{F_R(z)(1+\delta_z)^{j-R}}\cdot\frac{\nu(n)\,\dn(n,n/p)}{(1+\delta_z)\,\nu(n/p)}=\frac{\nu(n)}{F_R(z)(1+\delta_z)^{j+1-R}},
+\]
+because $\sum_{p\mid n}\dn(n,n/p)=1$. This proves \eqref{eq:roughmarg} by induction.
+\end{proof}
+
+For an integer $n=dm$ with $d\in\cS_z$, $m\in\cR_z$, call $\Omega(m)$ the \emph{large-prime rank} of $n$, and write it $J_z(n)=\sum_{p>z}v_p(n)$.
+
+\begin{proposition}[Product-chain bound]\label{prop:product}
+Let $z\ge3$ and let $R,a,b$ be integers with $1\le R\le a\le b$; put $\ell=b-a+1$. Let $A$ be a finite primitive set such that $a\le J_z(n)\le b$ for every $n\in A$. Then
+\begin{equation}\label{eq:product}
+\cE(A)\le(1+\delta_z)^{b-R}\,W(z)F_R(z)\,F^*_\ell(z).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Run the chains of Lemmas~\ref{lem:smoothchain} and~\ref{lem:roughchain} independently, and consider the random set
+\[
+\cH=\{(k,j):\ k\ge0,\ a\le j\le b,\ \br_j\ne\dagger,\ \bs_k\br_j\in A\}.
+\]
+Order pairs coordinatewise: $(k,j)\le(k',j')$ if $k\le k'$ and $j\le j'$. Then $\cH$ is an \emph{antichain}, that is, no two distinct elements are comparable. Indeed, if $(k,j)<(k',j')$ both lie in $\cH$, then $\bs_k\mid\bs_{k'}$ and $\br_j\mid\br_{j'}$, so $\bs_k\br_j$ divides $\bs_{k'}\br_{j'}$; the two are distinct because their ranks $k+j<k'+j'$ differ; this contradicts primitivity. In particular no two elements of $\cH$ share a first coordinate or a second coordinate, so $\cH$ has at most $\ell$ elements, with distinct first coordinates, and
+\[
+\sum_{(k,j)\in\cH}W_k(z)\le S_\ell(z).
+\]
+Each $n\in A$ has a unique factorization $n=dm$, with $k=\Omega(d)$ and $j=\Omega(m)\in[a,b]$, and $n=\bs_k\br_j$ exactly when $\bs_k=d$ and $\br_j=m$. Taking expectations and using \eqref{eq:smoothmarg}, \eqref{eq:roughmarg} and independence,
+\[
+\sum_{n=dm\in A}W_{\Omega(d)}(z)\cdot\frac{1}{d\,W_{\Omega(d)}(z)}\cdot\frac{\nu(m)}{F_R(z)(1+\delta_z)^{\Omega(m)-R}}\le S_\ell(z).
+\]
+Since $\Omega(m)\le b$, this gives $\sum_{n=dm\in A}\nu(m)/d\le(1+\delta_z)^{b-R}F_R(z)S_\ell(z)$. Finally $\nu(dm)\le\nu(m)/d$ because $\log(dm)\ge\log m$ (and $m\ge2$ since $\Omega(m)\ge a\ge1$), and $S_\ell(z)=W(z)F^*_\ell(z)$.
+\end{proof}
+
+%======================================================================
+\section{The large-prime rank of a typical integer}\label{sec:largerank}
+%======================================================================
+
+The following estimate is about all integers in the window, so it holds for any subset, in particular for any primitive set.
+
+\begin{lemma}\label{lem:rank}
+Fix $\lambda_0>0$. For $0\le\lambda\le\lambda_0$ and large $T$ set
+\begin{equation}\label{eq:params}
+h=\lambda\sqrt T,\qquad \kappa=T^{2/5},\qquad z=e^{e^{T-2\kappa}},\qquad a=\lfloor\kappa\rfloor,\qquad b=\lceil h+3\kappa\rceil.
+\end{equation}
+Then, uniformly in $\lambda$,
+\begin{equation}\label{eq:rankbound}
+\sum_{\substack{n\in I(T,h)\\ J_z(n)\notin[a,b]}}\nu(n)\ll_{\lambda_0}T^{-1/10}.
+\end{equation}
+\end{lemma}
+
+The heuristic is simple: an integer $n$ with $\log\log n=T+u$ has, on average, $\log\log n-\log\log z=u+2\kappa$ prime factors above $z$, with standard deviation about $\sqrt{u+2\kappa}\ll T^{1/4}$; and $u\in[0,h]$. So $J_z(n)$ lies in $[2\kappa,h+2\kappa]$ up to fluctuations of size $T^{1/4}$, well inside $[a,b]$.
+
+\begin{proof}
+Let $x=e^{e^T}$ and $y=e^{e^{T+h}}$. We first show that, uniformly for real $X\in[x,y]$,
+\begin{equation}\label{eq:density}
+\frac1X\#\{n\le X:\ J_z(n)\notin[a,b]\}\ll_{\lambda_0}T^{-3/5}+\exp\bigl(-c_{\lambda_0}T^{3/10}\bigr)
+\end{equation}
+for some $c_{\lambda_0}>0$. For a condition $\mathcal A$, $\one_{\mathcal A}$ denotes its indicator.
+
+\emph{Too few large prime factors.} Let $Y=X^{1/T^3}$, and for $n\le X$ let $V(n)=\sum_{z<p\le Y}\one_{p\mid n}$ count the distinct primes in $(z,Y]$ dividing $n$. Put $\beta=\sum_{z<p\le Y}1/p$. For large $T$ we have $Y>z$, and Mertens' formula gives $\beta=\log\log X-T+2\kappa-3\log T+O(1)$. Hence $\beta-\kappa\ge\kappa/2$ and $\beta\ll_{\lambda_0}\sqrt T$.
+
+Let $(Y_p)_{z<p\le Y}$ be independent with $\PP(Y_p=1)=1/p$, $\PP(Y_p=0)=1-1/p$, and $V^*=\sum_pY_p$, so $\EE V^*=\beta$. Expanding the fourth central moment using independence gives $\EE(V^*-\beta)^4\le\beta+3\beta^2$. On the other hand, for distinct primes $p_1,\dots,p_j$ ($j\le4$),
+\[
+\frac1X\sum_{n\le X}\prod_{i=1}^j\one_{p_i\mid n}=\frac{\lfloor X/(p_1\cdots p_j)\rfloor}{X}=\frac{1}{p_1\cdots p_j}+O(X^{-1}),
+\]
+which is exactly $\EE\prod_iY_{p_i}$ up to $O(X^{-1})$. Expanding $(V(n)-\beta)^4$, reducing repeated indicators by $\one^r=\one$, and summing the errors over the at most $(1+\beta+Y)^4$ terms gives
+\[
+\frac1X\sum_{n\le X}(V(n)-\beta)^4=\EE(V^*-\beta)^4+O\Bigl(\frac{(1+\beta+Y)^4}{X}\Bigr)\ll_{\lambda_0}T,
+\]
+since $Y^4/X=X^{4/T^3-1}\to0$. Now $V(n)\le J_z(n)$, so $J_z(n)<a\le\kappa$ forces $|V(n)-\beta|\ge\kappa/2$. By Markov's inequality,
+\begin{equation}\label{eq:lowertail}
+\frac1X\#\{n\le X:\ J_z(n)<a\}\ll_{\lambda_0}\frac{T}{\kappa^4}=T^{-3/5}.
+\end{equation}
+
+\emph{Too many large prime factors.} Let $1<r\le2$. Define a multiplicative function $g_r$ by $g_r(p^j)=(r-1)r^{j-1}$ if $p>z$ and $j\ge1$, and $g_r(p^j)=0$ if $p\le z$ and $j\ge1$. Summing a geometric series at each prime power shows $r^{J_z(n)}=\sum_{d\mid n}g_r(d)$. Hence, counting multiples of each $d$,
+\[
+\frac1X\sum_{n\le X}r^{J_z(n)}\le\sum_{d\le X}\frac{g_r(d)}{d}\le\prod_{z<p\le X}\Bigl(1+\frac{r-1}{p-r}\Bigr)\le\exp\bigl\{(r-1)(\log\log X-T+2\kappa+C_0)\bigr\},
+\]
+for an absolute constant $C_0$, using $\log(1+t)\le t$, Mertens' formula and $\sum_{p>z}p^{-2}\ll1/z$.
+
+Put $Q=h+2\kappa+C_0$, $\theta=\kappa/(4Q)$, and $r=e^\theta$. For large $T$ we have $\theta\le1/8\le\log2$, so $e^\theta-1\le\theta+\theta^2$; also $\log\log X-T\le h$ and $b\ge Q+\kappa/2$. By Markov's inequality applied to $r^{J_z(n)}$,
+\[
+\frac1X\#\{n\le X:\ J_z(n)>b\}\le\exp\bigl\{-\theta b+(e^\theta-1)Q\bigr\}\le\exp\Bigl\{-\frac{\kappa^2}{16Q}\Bigr\}\le\exp\bigl(-c_{\lambda_0}T^{3/10}\bigr).
+\]
+Together with \eqref{eq:lowertail} this proves \eqref{eq:density}.
+
+\emph{From density to Erd\H{o}s sum.} Let $N^{\rm exc}(t)$ count the $n\le t$ with $J_z(n)\notin[a,b]$ (for our fixed $T,z,a,b$), and let $\varepsilon_T$ be the right side of \eqref{eq:density} with its implied constant, so $N^{\rm exc}(t)\le\varepsilon_Tt$ for $x\le t\le y$. Partial summation, dropping a negative endpoint term, gives
+\[
+\sum_{\substack{x<n\le y\\ J_z(n)\notin[a,b]}}\nu(n)\le\frac{N^{\rm exc}(y)}{y\log y}+\int_x^yN^{\rm exc}(t)\frac{\log t+1}{t^2(\log t)^2}\,dt\le\varepsilon_T\Bigl(h+\frac1{\log x}\Bigr),
+\]
+using $\int_x^y dt/(t\log t)=h$ and $\int_x^ydt/(t(\log t)^2)=1/\log x-1/\log y$. Since $h\le\lambda_0\sqrt T$ and $\varepsilon_T\ll T^{-3/5}$, the result is $O_{\lambda_0}(T^{-1/10})$.
+\end{proof}
+
+%======================================================================
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proofmain}
+%======================================================================
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Fix $\lambda_0>0$ and let $0\le\lambda\le\lambda_0$. The case $\lambda=0$ is trivial, and the lower bound is \eqref{eq:lowerbound}. For the upper bound, choose the parameters \eqref{eq:params} and
+\[
+R=\Bigl\lceil\frac{\log T}{\log2}\Bigr\rceil .
+\]
+Then $R\le a$ for large $T$, $2^{-R}\le T^{-1}$ and $2^R\le2T$. Since $\log z=e^{T-2T^{2/5}}$, the quantity $\rho_z$ is smaller than any power of $T^{-1}$, and Lemma~\ref{lem:FR} gives
+\begin{equation}\label{eq:normalizations}
+W(z)F_R(z)=1+O(T^{-1}),\qquad(1+\delta_z)^{b-R}=1+O_{\lambda_0}(T^{-1}).
+\end{equation}
+
+Let $A\subset I(T,\lambda\sqrt T)$ be primitive. Remove from $A$ the elements whose large-prime rank $J_z(n)$ lies outside $[a,b]$; by Lemma~\ref{lem:rank} their total contribution is $O_{\lambda_0}(T^{-1/10})$. Applying Proposition~\ref{prop:product} to the rest,
+\begin{equation}\label{eq:upper1}
+\cE(A)\le C_{\lambda_0}T^{-1/10}+(1+\delta_z)^{b-R}\,W(z)F_R(z)\,F^*_{b-a+1}(z).
+\end{equation}
+Here, by Lemma~\ref{lem:normal} and the choice of $z$,
+\[
+\sigma_z^2=T-2T^{2/5}+O(1),\qquad\ell:=b-a+1=\lambda\sqrt T+2T^{2/5}+O(1),
+\]
+so $\ell/\sigma_z=\lambda+O_{\lambda_0}(T^{-1/10})$, uniformly down to $\lambda=0$. Lemma~\ref{lem:normal} (with $H=\lambda_0+3$) and the bound $|G'|=\phi(\cdot/2)\le1$ give
+\begin{equation}\label{eq:Fstarlambda}
+F^*_\ell(z)=G(\lambda)+O_{\lambda_0}(T^{-1/10}).
+\end{equation}
+Combining \eqref{eq:normalizations}--\eqref{eq:Fstarlambda} bounds $\cE(A)$ by $G(\lambda)+O_{\lambda_0}(T^{-1/10})$, uniformly in $A$ and $\lambda$. Together with the lower bound this proves \eqref{eq:main}.
+\end{proof}
+
+\begin{corollary}\label{cor:uniform}
+$\sup_{h\ge0}\bigl|\cM(T,h)-G(h/\sqrt T)\bigr|\to0$ as $T\to\infty$. In particular, if $h(T)/\sqrt T\to\infty$, then $\cM(T,h(T))\to1$.
+\end{corollary}
+
+\begin{proof}
+Let $f_T(\lambda)=\cM(T,\lambda\sqrt T)$. Theorem~\ref{thm:main} gives uniform convergence $f_T\to G$ on every interval $[0,K]$. Both $f_T$ and $G$ are nondecreasing in $\lambda$ (a longer window allows more sets), and by \eqref{eq:tail}, applied with $\log x=e^T$, we have $f_T\le1+O(e^{-T})$, while $G\le1$. Hence for $\lambda\ge K$,
+\[
+|f_T(\lambda)-G(\lambda)|\le\max\bigl\{1+O(e^{-T})-G(K),\ 1-f_T(K)\bigr\}.
+\]
+Let $T\to\infty$ and then $K\to\infty$.
+\end{proof}
+
+Corollary~\ref{cor:uniform} is an absolute error estimate; when $h/\sqrt T\to0$ both $\cM(T,h)$ and $G(h/\sqrt T)$ tend to $0$, and it says nothing about their ratio. The following statement covers that range.
+
+\begin{corollary}\label{cor:short}
+If $h=h(T)\to\infty$ and $h=o(\sqrt T)$, then $\cM(T,h)\sim h/\sqrt{2\pi T}$.
+\end{corollary}
+
+\begin{proof}
+For the lower bound take $k=\lfloor T+h/2\rfloor$ and apply Lemma~\ref{lem:lower} with $u_1=0$, $u_2=h/\sqrt T$ and $c=h/(2\sqrt T)$:
+\[
+\sum_{\substack{n\in I(T,h)\\ \Omega(n)=k}}\nu(n)=G(h/\sqrt T)+O(T^{-1/2})=\frac{h}{\sqrt{2\pi T}}\bigl(1+O(h^2/T)\bigr)+O(T^{-1/2}),
+\]
+which is $\sim h/\sqrt{2\pi T}$ because $h\to\infty$.
+
+For the upper bound let $A\subset I(T,h)$ be primitive, $x=e^{e^T}$, $y=e^{e^{T+h}}$, and $\mathcal L_A(t)=\sum_{n\in A,\,n\le t}1/n$. Partial summation and \eqref{eq:ESS} give, uniformly in $A$,
+\[
+\cE(A)=\frac{\mathcal L_A(y)}{\log y}+\int_x^y\frac{\mathcal L_A(t)}{t(\log t)^2}\,dt
+\le\frac{1+o(1)}{\sqrt{2\pi}}\Bigl(\frac1{\sqrt{T+h}}+2\bigl(\sqrt{T+h}-\sqrt T\bigr)\Bigr),
+\]
+and the right side is asymptotic to $h/\sqrt{2\pi T}$.
+\end{proof}
+
+%======================================================================
+\section{Stability}\label{sec:stability}
+%======================================================================
+
+Throughout this section write $p_k=p_k(z)$, $\sigma=\sigma_z$ and $F^*_j=F^*_j(z)$.
+
+\subsection{Two lemmas}
+The first lemma quantifies the rearrangement step: choosing $\ell$ ranks other than the best block of $\ell$ consecutive ranks costs a definite amount.
+
+\begin{lemma}\label{lem:rearrange}
+Let $\ell=\ell(z)$ be a positive integer with $\ell/\sigma\to\lambda>0$ as $z\to\infty$. Choose $k_0\in\N_0$ such that the block $\cI=\{k_0,\dots,k_0+\ell-1\}$ consists of $\ell$ largest weights $p_k$. Then
+\begin{equation}\label{eq:centre}
+k_0+\frac{\ell-1}{2}=\mu_z+O_\lambda(\sigma^{1/2}).
+\end{equation}
+For a finite set $S\subset\N_0$ with $|S|\le\ell$, let $\fm=\ell-|S\cap\cI|$ be the number of elements of $\cI$ missing from $S$. There are constants $c_\lambda,C_\lambda>0$ such that, for all sufficiently large $z$,
+\begin{equation}\label{eq:rearrange}
+F^*_\ell-\sum_{k\in S}p_k\ \ge\ c_\lambda\Bigl(\frac{\fm}{\sigma}\Bigr)^2-\frac{C_\lambda}{\sigma}.
+\end{equation}
+The constants can be chosen uniformly when $\ell/\sigma$ stays in a fixed compact subinterval of $(0,\infty)$.
+\end{lemma}
+
+\begin{proof}
+For $x>0$ let $\Phi_x(t)=\Phi(t+x/2)-\Phi(t-x/2)$, the normal mass of an interval of length $x$ centred at $t$. It has a unique maximum $G(x)$ at $t=0$, and $\Phi_x''(0)=-x\phi(x/2)<0$. Hence, uniformly for $x$ in a compact subinterval of $(0,\infty)$, the inequality $G(x)-\Phi_x(t)=O(\sigma^{-1})$ forces $t=O(\sigma^{-1/2})$: the strict maximum first confines $t$ to a neighbourhood of $0$, and there Taylor's theorem applies. By \eqref{eq:BE} the mass of the block $\cI$ is $\Phi_x(t)+O(\sigma^{-1})$, with $x=\ell/\sigma$ and centre $t=(k_0+\ell/2-1-\mu_z)/\sigma$; by \eqref{eq:Fstar} it is also $G(x)+O(\sigma^{-1})$. So $t=O(\sigma^{-1/2})$, that is $k_0+\ell/2-1=\mu_z+O(\sigma^{1/2})$, which differs from \eqref{eq:centre} by $1/2$.
+
+For \eqref{eq:rearrange}, list the weights in decreasing order, putting those of $\cI$ first in case of ties at its boundary. The $\ell-\fm$ elements of $S\cap\cI$ carry total weight at most $F^*_{\ell-\fm}$. At most $\fm$ elements of $S$ lie outside $\cI$, and their weight is at most the weight of the $\fm$ largest weights outside $\cI$, namely $F^*_{\ell+\fm}-F^*_\ell$. Hence
+\begin{equation}\label{eq:secdiff}
+F^*_\ell-\sum_{k\in S}p_k\ge2F^*_\ell-F^*_{\ell-\fm}-F^*_{\ell+\fm}.
+\end{equation}
+Put $x=\ell/\sigma$ and $y=\fm/\sigma$, so $0\le y\le x$. By \eqref{eq:Fstar} the right side of \eqref{eq:secdiff} is $2G(x)-G(x-y)-G(x+y)+O_\lambda(\sigma^{-1})$. Since $G''(w)=-w\phi(w/2)/4<0$ for $w>0$, the function $G$ is strictly concave on $[0,\infty)$, so $2G(x)-G(x-y)-G(x+y)>0$ for $0<y\le x$; dividing by $y^2$ and noting that the quotient tends to $-G''(x)>0$ as $y\to0$, we get a continuous positive function on a compact set of pairs $(x,y)$, hence $2G(x)-G(x-y)-G(x+y)\ge c_\lambda y^2$. This proves \eqref{eq:rearrange}.
+\end{proof}
+
+The second lemma uses the \emph{order} of the points of an antichain, not just their number.
+
+\begin{lemma}\label{lem:antichain}
+Let $a\le b$ be integers, $k_0\in\N_0$, $\ell=b-a+1$ and $\cI=\{k_0,\dots,k_0+\ell-1\}$. Let $\cH$ be an antichain in $\N_0\times\{a,\dots,b\}$ under the coordinatewise order, let $S$ be its set of first coordinates, and let $\fm=\ell-|S\cap\cI|$. Then $|S\setminus\cI|\le\fm$, and every $(k,j)\in\cH$ with $k\in\cI$ satisfies
+\begin{equation}\label{eq:diag}
+|k+j-(k_0+b)|\le\fm.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+List the points of $\cH$ as $(k_i,j_i)$, $1\le i\le r$, with $k_1<k_2<\dots<k_r$. Since $\cH$ is an antichain, $j_1>j_2>\dots>j_r$; hence $r\le\ell$ and
+\[
+a+r-i\le j_i\le b-i+1 .
+\]
+Let $r_-$ and $r_+$ be the numbers of $k_i$ below and above $\cI$. If $k_i\in\cI$, then exactly $i-r_-$ of the points $k_1,\dots,k_i$ lie in $\{k_0,\dots,k_i\}$, and at most $\fm$ points of $\cI$ are missing from $S$, so
+\[
+i-r_--1\le k_i-k_0\le i-r_--1+\fm .
+\]
+Adding the two displays and using $r=r_-+r_++\ell-\fm$ gives $r_+-\fm\le k_i+j_i-(k_0+b)\le\fm-r_-$, which implies \eqref{eq:diag}. Finally $|S\setminus\cI|=r-(\ell-\fm)\le\fm$ because $r\le\ell$.
+\end{proof}
+
+\subsection{Proof of the stability theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:stability}]
+Fix $\lambda,\eta>0$, take the parameters of the proof of Theorem~\ref{thm:main} (with $\lambda_0=\lambda$), and write $\ell=b-a+1$, $\sigma=\sigma_z$. Choose a block $\cI=\{k_0,\dots,k_0+\ell-1\}$ of $\ell$ largest weights as in Lemma~\ref{lem:rearrange}. Since $\mu_z=T-2T^{2/5}+O(1)$ and $a+b=\lambda\sqrt T+4T^{2/5}+O(1)$, \eqref{eq:centre} gives
+\begin{equation}\label{eq:k0b}
+k_0+b=\mu_z+\frac{a+b}{2}+O_\lambda(\sigma^{1/2})=T+\frac{\lambda\sqrt T}2+O_\lambda(T^{1/4}).
+\end{equation}
+
+Let $A\subset I(T,\lambda\sqrt T)$ be primitive and $A_g=\{n\in A: a\le J_z(n)\le b\}$; by Lemma~\ref{lem:rank} the discarded part has Erd\H{o}s sum $O_\lambda(T^{-1/10})$. Run the two chains independently as in the proof of Proposition~\ref{prop:product}, with the antichain $\cH$ defined from $A_g$, and set
+\[
+\cU=\sum_{(k,j)\in\cH}p_k,\qquad \cQ_T=(1+\delta_z)^{b-R}W(z)F_R(z)=1+O_\lambda(T^{-1}).
+\]
+For every subset $\cB\subset A_g$, the computation in the proof of Proposition~\ref{prop:product} gives
+\[
+\EE\sum_{\substack{(k,j)\in\cH\\ \bs_k\br_j\in\cB}}p_k=\frac{1}{W(z)F_R(z)}\sum_{n=dm\in\cB}\frac{\nu(m)}{d\,(1+\delta_z)^{\Omega(m)-R}},
+\]
+and therefore, as $\Omega(m)\le b$ and $\nu(dm)\le\nu(m)/d$,
+\begin{equation}\label{eq:subset}
+\cE(\cB)\le\cQ_T\,\EE\sum_{\substack{(k,j)\in\cH\\ \bs_k\br_j\in\cB}}p_k .
+\end{equation}
+In particular $\EE\,\cU\ge\cE(A_g)/\cQ_T$.
+
+Put $e_T=\Delta_T(A)+T^{-1/10}$. Always $\cU\le F^*_\ell$, since $\cH$ has at most $\ell$ distinct first coordinates. Using \eqref{eq:main}, \eqref{eq:Fstarlambda}, the discarded-mass bound and $\cQ_T=1+O(T^{-1})$,
+\begin{equation}\label{eq:expdef}
+0\le\EE\bigl(F^*_\ell-\cU\bigr)\ll_\lambda e_T .
+\end{equation}
+For each realization let $S$ be the set of first coordinates of $\cH$ and $\fm=\ell-|S\cap\cI|$. Applying \eqref{eq:rearrange} pointwise, taking expectations, and using $\sigma^{-1}\ll T^{-1/2}\le e_T$,
+\begin{equation}\label{eq:m2}
+\EE\Bigl(\frac{\fm}{\sigma}\Bigr)^2\ll_\lambda e_T .
+\end{equation}
+
+Let $\cV$ be the sum of $p_k$ over the points $(k,j)\in\cH$ with $|k+j-T-\lambda\sqrt T/2|>\eta\sqrt T$. Note that $k+j=\Omega(\bs_k\br_j)$. For large $T$, \eqref{eq:k0b} and \eqref{eq:diag} show that no such point has $k\in\cI$ when $\fm\le\eta\sigma/3$. There are at most $\fm$ points with $k\notin\cI$ (Lemma~\ref{lem:antichain}), each of weight $O(\sigma^{-1})$ by \eqref{eq:maxpk}. And always $\cV\le\cU\le F^*_\ell\le1$. Hence
+\[
+\cV\ll\frac{\fm}{\sigma}+\one_{\{\fm>\eta\sigma/3\}} .
+\]
+By Cauchy--Schwarz, Markov's inequality and \eqref{eq:m2},
+\[
+\EE\,\cV\ll_{\lambda,\eta}e_T^{1/2}+e_T\ll_{\lambda,\eta}e_T^{1/2},
+\]
+where the last step uses that $e_T$ is bounded (by Theorem~\ref{thm:main} and $0\le\Delta_T(A)\le\cM(T,\lambda\sqrt T)$). Applying \eqref{eq:subset} to $\cB=\{n\in A_g:|\Omega(n)-T-\lambda\sqrt T/2|>\eta\sqrt T\}$ bounds its Erd\H{o}s sum by $\cQ_T\,\EE\,\cV\ll e_T^{1/2}$. Adding back the discarded part, of size $O(T^{-1/10})\le O(e_T^{1/2})$, proves \eqref{eq:stability}.
+
+For the last assertion: if $\cE(A_T)\to G(\lambda)$, then $\Delta_T(A_T)\to0$ by Theorem~\ref{thm:main}.
+\end{proof}
+
+\subsection{One exact rank is too restrictive}
+
+Theorem~\ref{thm:stability} locates near-maximizers on the scale $\sqrt T$. The following example shows that asymptotically maximizing sets need not concentrate on a single value of $\Omega$.
+
+\begin{proposition}\label{prop:example}
+Fix $\lambda>0$, let $k_T=\lfloor T+\lambda\sqrt T/2\rfloor$, and
+\[
+\cC_T=\bigl\{n\in I(T,\lambda\sqrt T):\ \Omega(n)+v_2(n)=k_T\bigr\}.
+\]
+Then $\cC_T$ is primitive and $\cE(\cC_T)\to G(\lambda)$. For every fixed integer $r\ge0$,
+\begin{equation}\label{eq:halving}
+\sum_{\substack{n\in\cC_T\\ v_2(n)=r}}\nu(n)\longrightarrow2^{-r-1}G(\lambda),
+\end{equation}
+and
+\[
+\max_{k\ge0}\sum_{\substack{n\in\cC_T\\ \Omega(n)=k}}\nu(n)\longrightarrow\tfrac12G(\lambda).
+\]
+\end{proposition}
+
+\begin{proof}
+Let $f(n)=\Omega(n)+v_2(n)$. Then $f(uv)=f(u)+f(v)$ for all $u,v\in\N$, and $f(d)\ge1$ for $d>1$. If $n$ properly divides $n'$, write $n'=nd$ with $d>1$; then $f(n')>f(n)$. So every level set of $f$, and in particular $\cC_T$, is primitive.
+
+Fix $r$ and write $n=2^rm$ with $m$ odd; then $f(n)=\Omega(m)+2r$, so $n\in\cC_T$ means $\Omega(m)=k_T-2r$ and $m$ lies in the window divided by $2^r$. Dividing the endpoints of the window by a fixed power of $2$ changes their double logarithms by $O_r(e^{-T})$, so Lemma~\ref{lem:lower} (which is uniform in its parameters) shows that \emph{all} $m$ (odd or even) of rank $k_T-2r$ in the shifted window have total weight $G(\lambda)+o(1)$. The even ones are $m=2q$ with $\Omega(q)=k_T-2r-1$, and $\nu(2q)=(\frac12+o(1))\nu(q)$ uniformly in the window; by the same lemma they contribute $\frac12G(\lambda)+o(1)$. So the odd $m$ contribute $\frac12G(\lambda)+o(1)$. Finally $\nu(2^rm)=(2^{-r}+o(1))\nu(m)$ uniformly, which proves \eqref{eq:halving}.
+
+Summing \eqref{eq:halving} over $0\le r\le N$ gives $\liminf\cE(\cC_T)\ge(1-2^{-N-1})G(\lambda)$; letting $N\to\infty$ and using Theorem~\ref{thm:main} for the upper bound gives $\cE(\cC_T)\to G(\lambda)$. On $\cC_T$ we have $\Omega(n)=k_T-v_2(n)$, so each value of $\Omega$ corresponds to exactly one value of $v_2$. The part with $v_2(n)=0$ has limiting weight $G(\lambda)/2$, and all the other parts together also have limiting weight $G(\lambda)/2$. This proves the last assertion.
+\end{proof}
+
+%======================================================================
+\appendix
+\section{Numerical checks}\label{app:verification}
+%======================================================================
+
+The accompanying repository contains Python scripts (standard library only) that check the elementary and numerical ingredients of the proofs; \texttt{python3 verification/run\_all.py} runs all of them. They cover:
+\begin{enumerate}[label=(\Alph*)]
+\item the Gaussian facts used (derivatives of $G$, the curvature of $\Phi_x$, the second-difference bound in Lemma~\ref{lem:rearrange}), the Poisson local limit step and the change of variables in Lemma~\ref{lem:lower}, and the bookkeeping of exponents in Sections~\ref{sec:largerank}--\ref{sec:stability};
+\item exact normalized flows between consecutive ranks of $z$-smooth integers for small sets of primes (Lemma~\ref{lem:smoothchain}), log-concavity of $W_k(z)$, and Lemma~\ref{lem:normal} and \eqref{eq:secdiff} for $z$ up to $10^6$;
+\item the integrals $a_R$ (including $(a_R-e^{-\gamma})2^R\to0.3152\ldots$, an independent confirmation of \eqref{eq:aR}), formula \eqref{eq:aRcube}, the generating function $\Psi$, inequality \eqref{eq:Pz} and estimate \eqref{eq:FRa} at $z=1000$, and the identities and row-sum bound behind Lemma~\ref{lem:roughchain};
+\item Lemma~\ref{lem:antichain} on all small antichains, the identity $r^{J_z(n)}=\sum_{d\mid n}g_r(d)$, the moment and Chernoff inequalities of Lemma~\ref{lem:rank}, and the primitivity of the level sets in Proposition~\ref{prop:example}.
+\end{enumerate}
+These checks are not part of the proofs, which are complete as written.
+
+%======================================================================
+\section*{Declarations}
+%======================================================================
+\textbf{Author contributions.} Sumit Kumar Jha is the sole author and is responsible for the mathematical content, computational verification, interpretation, writing and final approval of the manuscript.\\
+\textbf{AI assistance.} AI tools assisted with mathematical exploration, literature searches, and preparation of the manuscript.\\
+\textbf{Funding.} No funding was received for this work.\\
+\textbf{Conflict of interest.} The author declares no conflict of interest.\\
+\textbf{Data availability.} No data sets were used. The verification scripts are available at \url{https://github.com/ramanujamath/erdos-sums-double-log-windows}.
+
+\begin{thebibliography}{11}
+
+\bibitem{ABLLPSTT}
+B.~Alexeev, K.~Barreto, Y.~Li, J.~D. Lichtman, L.~Price, J.~I. Shah, Q.~Tang and T.~Tao, Primitive sets and von Mangoldt chains: Erd\H{o}s Problem \#1196 and beyond, arXiv:2605.00301, 2026.
+
+\bibitem{AKS}
+R.~Ahlswede, L.~Khachatrian and A.~S\'ark\"ozy, On the density of primitive sets, \emph{J. Number Theory} \textbf{109} (2004), 319--361.
+
+\bibitem{Dusart}
+P.~Dusart, Estimates of some functions over primes without R.H., arXiv:1002.0442, 2010.
+
+\bibitem{ESS1}
+P.~Erd\H{o}s, A.~S\'ark\"ozy and E.~Szemer\'edi, On an extremal problem concerning primitive sequences, \emph{J. London Math. Soc.} \textbf{42} (1967), 484--488.
+
+\bibitem{ESS2}
+P.~Erd\H{o}s, A.~S\'ark\"ozy and E.~Szemer\'edi, On a theorem of Behrend, \emph{J. Austral. Math. Soc.} \textbf{7} (1967), 9--16.
+
+\bibitem{GaetzGao}
+C.~Gaetz and Y.~Gao, On the Sperner property for the absolute order on complex reflection groups, \emph{Algebraic Combinatorics} \textbf{3} (2020), 791--800.
+
+\bibitem{GLW}
+O.~Gorodetsky, J.~D. Lichtman and M.~D. Wong, On Erd\H{o}s sums of almost primes, \emph{C. R. Math. Acad. Sci. Paris} \textbf{362} (2024), 1571--1596; arXiv:2303.08277.
+
+\bibitem{Harper}
+L.~H. Harper, The morphology of partially ordered sets, \emph{J. Combin. Theory Ser. A} \textbf{17} (1974), 44--58.
+
+\bibitem{Kuch}
+P.~Kucheriaviy, Erd\H{o}s inequality for primitive sets, \emph{J. Number Theory} \textbf{280} (2026), 113--152.
+
+\bibitem{Lichtman-BM}
+J.~D. Lichtman, Almost primes and the Banks--Martin conjecture, \emph{J. Number Theory} \textbf{211} (2020), 513--529.
+
+\bibitem{Petrov}
+V.~V. Petrov, \emph{Sums of Independent Random Variables}, Ergebnisse der Mathematik und ihrer Grenzgebiete~82, Springer, Berlin, 1975.
+
+\end{thebibliography}
+
+\end{document}
